@@ -1,57 +1,63 @@
+// state - count: 0
+
+// action - increment, decrement, reset
+// reducer
+// store
+
 const { createStore } = require("redux");
 
-// defining constansce
-
+// Defining Constans
 const INCREMENT = "INCREMENT";
 const DECREMENT = "DECREMENT";
-const ADD_USER = "ADD_USER";
+const RESET = "RESET";
 
-// State
-const initialCounterState = {
+// Defining State
+const initialState = {
   count: 0,
-  users: "", //example for multiple state
+  amount: 0,
 };
 
-const initialUsersState = {
-  users: [{ name: "anisul islam" }],
-};
-
-// action -{Action is an object. And there are 2 important things (type,payload)}
-// Increment Counter
-
-// action type
-const incrementCounter = () => {
+// Defining Action for Increment
+const incrementAction = () => {
   return {
     type: INCREMENT,
   };
 };
 
-// action type
-// const decrementCounter = () => {
-//   return {
-//     type: DECREMENT,
-//   };
-// };
-
-const addUser = () => {
+// Defining Action for Decrement
+const decrementAction = () => {
   return {
-    type: ADD_USER,
-    payload: { name: "shakil" },
+    type: DECREMENT,
   };
 };
 
-// create reducer for counter
-const counterReducer = (state, action) => {
+// Defining Action for Reset
+const resetAction = () => {
+  return {
+    type: RESET,
+  };
+};
+
+// Creating Reducer
+
+const counterReducer = (state = initialState, action) => {
   switch (action.type) {
     case INCREMENT:
       return {
-        ...state, //when multiplae state then we use spreade opertor to catch all the state
+        ...state,
         count: state.count + 1,
       };
 
     case DECREMENT:
       return {
+        ...state,
         count: state.count - 1,
+      };
+
+    case RESET:
+      return {
+        ...state,
+        count: 0,
       };
 
     default:
@@ -59,8 +65,16 @@ const counterReducer = (state, action) => {
   }
 };
 
-// Main things of react redux Tool kits
-// 1. state
-// 2. dispatch action
-// 3. reducer
-// 4. store - getState(),dispatch(), subscribe()
+// Create Store
+const store = createStore(counterReducer);
+
+store.subscribe(() => {
+  console.log(store.getState());
+});
+
+store.dispatch(incrementAction());
+store.dispatch(incrementAction());
+store.dispatch(incrementAction());
+store.dispatch(incrementAction());
+store.dispatch(decrementAction());
+store.dispatch(resetAction());

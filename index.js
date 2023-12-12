@@ -1,12 +1,9 @@
-const { createStore, combineReducers } = require("redux");
+const { createStore, applyMiddleware } = require("redux");
+const { default: logger } = require("redux-logger");
 
 //Product Constains
 const GET_PRODUCT = "GET_PRODUCT";
 const ADD_PRODUCT = "ADD_PRODUCT";
-
-//Cart Constains
-const GET_CART_ITEMS = "GET_CART_ITEMS";
-const ADD_CART_ITEMS = "ADD_CART_ITEMS";
 
 //declearing state Of Products
 const initialProductState = {
@@ -14,60 +11,21 @@ const initialProductState = {
   numberOfProd: 2,
 };
 
-//declearing state Of Carts
-const initialCartState = {
-  carts: ["sugar"],
-  numberOfCart: 1,
-};
-
 // Product Action Type
 
+// get product action
 const getProduct = () => {
   return {
     type: GET_PRODUCT,
   };
 };
 
+// Add product action
 const addProduct = (value) => {
   return {
     type: ADD_PRODUCT,
     payload: value,
   };
-};
-
-// Cart Action Types
-
-const getCartItems = () => {
-  return {
-    type: GET_CART_ITEMS,
-  };
-};
-
-const addCartItems = (cart) => {
-  return {
-    type: ADD_CART_ITEMS,
-    payload: cart,
-  };
-};
-
-//DECLEARING Cart reducer
-
-const cartReducer = (state = initialCartState, action) => {
-  switch (action.type) {
-    case GET_CART_ITEMS: {
-      return {
-        ...state,
-      };
-    }
-    case ADD_CART_ITEMS: {
-      return {
-        carts: [...state.carts, action.payload],
-        numberOfCart: state.numberOfCart + 1,
-      };
-    }
-    default:
-      return state;
-  }
 };
 
 // declearing Product Reducer
@@ -92,15 +50,8 @@ const productReducer = (state = initialProductState, action) => {
   }
 };
 
-// We are use combined reducer for multiple reducer
-
-const rootReducer = combineReducers({
-  productR: productReducer,
-  cartR: cartReducer,
-});
-
 // create Store for product reducer
-const store = createStore(rootReducer);
+const store = createStore(productReducer, applyMiddleware(logger));
 
 store.subscribe(() => {
   console.log(store.getState());
@@ -108,6 +59,3 @@ store.subscribe(() => {
 
 store.dispatch(getProduct());
 store.dispatch(addProduct("Chili"));
-
-store.dispatch(getCartItems());
-store.dispatch(addCartItems("Tea"));
